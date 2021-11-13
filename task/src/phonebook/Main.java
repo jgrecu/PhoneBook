@@ -8,7 +8,6 @@ import java.util.Scanner;
 
 public class Main {
     private static long linearSearchTime;
-    private static long linearSearchTimeTemp = 1653109967298L;
     private static long sortingTime;
     private static long jumpSearchTime;
     public static void main(String[] args) {
@@ -21,7 +20,7 @@ public class Main {
         System.out.println("Start searching (linear search)...");
         long foundLinear = linearSearch(directory, find);
         System.out.printf("Found %d / %d entries. Time taken: %s%n%n", foundLinear, find.size(), calculateTimeTaken(linearSearchTime));
-        
+
         System.out.println("Start searching (bubble sort + jump search)...");
         List<String> sortedDirectory = sortList(directory);
         if (!sortedDirectory.isEmpty()) {
@@ -121,7 +120,7 @@ public class Main {
         for (int i = 0; i < directory.size(); i++) {
             for (int j = i + 1; j < directory.size(); j++) {
                 long tempTimeDifference = System.currentTimeMillis() - sortingTimeStart;
-                if (tempTimeDifference > (10 * linearSearchTimeTemp)) {
+                if (tempTimeDifference > (10 * linearSearchTime)) {
                     sortingTime = tempTimeDifference;
                     return new ArrayList<>();
                 }
