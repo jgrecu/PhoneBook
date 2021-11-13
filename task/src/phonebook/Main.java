@@ -90,6 +90,31 @@ public class Main {
         return found;
     }
 
+    private static List<String> bubbleSortList(List<String> directory) {
+        long sortingTimeStart = System.currentTimeMillis();
+        List<String> list = new ArrayList<>(directory);
+        /*int n = list.size();
+        String temp;
+        for (int i = 0; i < n; i++) {
+            for (int j = 1; j < (n - i); j++) {
+                long tempTimeDifference = System.currentTimeMillis() - sortingTimeStart;
+                if (tempTimeDifference > (10 * linearSearchTime)) {
+                    sortingTime = tempTimeDifference;
+                    return new ArrayList<>();
+                }
+                if (list.get(j - 1).split("\\s+", 2)[1].compareTo(list.get(j).split("\\s+", 2)[1]) > 0) {
+                    temp =  list.get(j - 1);
+                    list.set(j - 1, list.get(j));
+                    list.set(j, temp);
+                }
+            }
+        }*/
+        list.sort(Comparator.comparing(a -> a.split("\\s+", 2)[1]));
+        long sortingTimeStop = System.currentTimeMillis();
+        sortingTime = sortingTimeStop - sortingTimeStart;
+        return list;
+    }
+    
     private static long jumpSearchElement(List<String> list, String element) {
         int size = list.size();
         int block = (int) Math.floor(Math.sqrt(size));
