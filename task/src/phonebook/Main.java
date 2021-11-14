@@ -96,6 +96,7 @@ public class Main {
         /*int n = list.size();
         String temp;
         for (int i = 0; i < n; i++) {
+            boolean swapped = false;
             for (int j = 1; j < (n - i); j++) {
                 long tempTimeDifference = System.currentTimeMillis() - sortingTimeStart;
                 if (tempTimeDifference > (10 * linearSearchTime)) {
@@ -107,6 +108,9 @@ public class Main {
                     list.set(j - 1, list.get(j));
                     list.set(j, temp);
                 }
+            }
+            if (!swapped) {
+                break;
             }
         }*/
         list.sort(Comparator.comparing(a -> a.split("\\s+", 2)[1]));
