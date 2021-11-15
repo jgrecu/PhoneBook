@@ -22,7 +22,7 @@ public class Main {
         System.out.printf("Found %d / %d entries. Time taken: %s%n%n", foundLinear, find.size(), calculateTimeTaken(linearSearchTime));
 
         System.out.println("Start searching (bubble sort + jump search)...");
-        List<String> sortedDirectory = sortList(directory);
+        List<String> sortedDirectory = bubbleSortList(directory);
         if (!sortedDirectory.isEmpty()) {
             long foundJump = jumpSearchList(sortedDirectory, find);
             System.out.printf("Found %d / %d entries. Time taken: %s%n", foundJump, find.size(), calculateTimeTaken(jumpSearchTime + sortingTime));
@@ -93,7 +93,7 @@ public class Main {
     private static List<String> bubbleSortList(List<String> directory) {
         long sortingTimeStart = System.currentTimeMillis();
         List<String> list = new ArrayList<>(directory);
-        /*int n = list.size();
+        int n = list.size();
         String temp;
         for (int i = 0; i < n; i++) {
             boolean swapped = false;
@@ -107,61 +107,40 @@ public class Main {
                     temp =  list.get(j - 1);
                     list.set(j - 1, list.get(j));
                     list.set(j, temp);
+                    swapped = true;
                 }
             }
             if (!swapped) {
                 break;
             }
-        }*/
-        list.sort(Comparator.comparing(a -> a.split("\\s+", 2)[1]));
+        }
+        /*list.sort(Comparator.comparing(a -> a.split("\\s+", 2)[1]));*/
         long sortingTimeStop = System.currentTimeMillis();
         sortingTime = sortingTimeStop - sortingTimeStart;
         return list;
     }
     
     private static long jumpSearchElement(List<String> list, String element) {
-        int size = list.size();
-        int block = (int) Math.floor(Math.sqrt(size));
-        if (element.compareTo(list.get(size - 1).split("\\s+", 2)[1]) > 0 || element.compareTo(list.get(0).split("\\s+", 2)[1]) < 0) {
+        int listSize = list.size();
+        int jumpBlock = (int) Math.floor(Math.sqrt(listSize));
+        if (element.compareTo(list.get(listSize - 1).split("\\s+", 2)[1]) > 0 ||
+                element.compareTo(list.get(0).split("\\s+", 2)[1]) < 0) {
             return -1;
         }
-        int i = 0;
-        int j = block;
-        while (list.get(j).split("\\s+", 2)[1].compareTo(element) < 0 && j < size) {
-            i = j;
-            j = j + block;
-            if (j > size - 1) {
-                j = size - 1;
+        int startPosition = 0;
+        int currentPosition = jumpBlock;
+        while (list.get(currentPosition).split("\\s+", 2)[1].compareTo(element) < 0) {
+            startPosition = currentPosition;
+            currentPosition += jumpBlock;
+            if (currentPosition > listSize - 1) {
+                currentPosition = listSize - 1;
             }
         }
-        for (int k = i; k <= j; k++) {
+        for (int k = startPosition; k <= currentPosition; k++) {
             if (list.get(k).split("\\s+", 2)[1].compareTo(element) == 0) {
                 return 1;
             }
         }
         return -1;
-    }
-
-    private static List<String> sortList(List<String> directory) {
-        long sortingTimeStart = System.currentTimeMillis();
-        List<String> list = new ArrayList<>(directory);
-        String temp;
-        for (int i = 0; i < directory.size(); i++) {
-            for (int j = i + 1; j < directory.size(); j++) {
-                long tempTimeDifference = System.currentTimeMillis() - sortingTimeStart;
-                if (tempTimeDifference > (10 * linearSearchTime)) {
-                    sortingTime = tempTimeDifference;
-                    return new ArrayList<>();
-                }
-                if (directory.get(i).split("\\s+", 2)[1].compareTo(directory.get(j).split("\\s+", 2)[1]) > 0) {
-                    temp =  directory.get(i);
-                    directory.set(i, directory.get(j));
-                    directory.set(j, temp);
-                }
-            }
-        }
-        long sortingTimeStop = System.currentTimeMillis();
-        sortingTime = sortingTimeStop - sortingTimeStart;
-        return list;
     }
 }
