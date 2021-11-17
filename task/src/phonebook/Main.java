@@ -18,8 +18,8 @@ public class Main {
         List<String> find = readFileToList(pathToFile);
         List<String> directory = readFileToList(pathSearchFile);
 
-//        performLinearSearch(find, directory);
-//        performBubbleSortAndJumpOrLinearSearch(find, directory);
+        performLinearSearch(find, directory);
+        performBubbleSortAndJumpOrLinearSearch(find, directory);
         performQuickSortAndBinarySearch(find, directory);
     }
 
@@ -135,10 +135,30 @@ public class Main {
     private static long binarySearchList(List<String> directory, List<String> find) {
         long binaryTimeStart = System.currentTimeMillis();
         long found = 0;
-        // Algo
+        for (String toFind : find) {
+            long result = binarySearchElement(directory, toFind, 0, directory.size() - 1);
+            if (result == 1) {
+                found++;
+            }
+        }
         long binaryTimeStop = System.currentTimeMillis();
         binarySearchTime = binaryTimeStop - binaryTimeStart;
         return found;
+    }
+
+    private static long binarySearchElement(List<String> list, String element, int low, int high) {
+        int middle = low  + ((high - low) / 2);
+        if (high < low) {
+            return -1;
+        }
+
+        if (element.compareTo(list.get(middle).split("\\s+", 2)[1]) == 0) {
+            return 1;
+        } else if (element.compareTo(list.get(middle).split("\\s+", 2)[1]) < 0) {
+            return binarySearchElement(list, element, low, middle - 1);
+        } else {
+            return binarySearchElement(list, element, middle + 1, high);
+        }
     }
 
     private static List<String> bubbleSortList(List<String> directory) {
@@ -150,7 +170,7 @@ public class Main {
             boolean swapped = false;
             for (int j = 1; j < (n - i); j++) {
                 long tempTimeDifference = System.currentTimeMillis() - sortingTimeStart;
-                if (tempTimeDifference > (10 * linearSearchTime)) {
+                if (tempTimeDifference > (2 * linearSearchTime)) {
                     sortingTime = tempTimeDifference;
                     return new ArrayList<>();
                 }
