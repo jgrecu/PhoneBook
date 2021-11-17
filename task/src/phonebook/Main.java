@@ -2,15 +2,14 @@ package phonebook;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     private static long linearSearchTime;
     private static long sortingTime;
     private static long jumpSearchTime;
     private static long binarySearchTime;
+    private static long hashSearchTime;
     public static void main(String[] args) {
         String pathToFile = "/Users/i337469/Downloads/find.txt";
         String pathSearchFile = "/Users/i337469/Downloads/directory.txt";
@@ -21,6 +20,16 @@ public class Main {
         performLinearSearch(find, directory);
         performBubbleSortAndJumpOrLinearSearch(find, directory);
         performQuickSortAndBinarySearch(find, directory);
+        performHashAndSearch(find, directory);
+    }
+
+    private static void performHashAndSearch(List<String> find, List<String> directory) {
+        System.out.println("Start searching (hash table)...");
+        Map<String, String> hashDirectory = hashMap(directory);
+        long foundHash = hashSearch(hashDirectory, find);
+        System.out.printf("Found %d / %d entries. Time taken: %s%n", foundHash, find.size(), calculateTimeTaken(hashSearchTime + sortingTime));
+        System.out.printf("Creating time: %s%n", calculateTimeTaken(sortingTime));
+        System.out.printf("Searching time: %s%n%n", calculateTimeTaken(hashSearchTime));
     }
 
     private static void performQuickSortAndBinarySearch(List<String> find, List<String> directory) {
@@ -223,5 +232,31 @@ public class Main {
         sorted = smaller;
 
         return sorted;
+    }
+
+    private static long hashSearch(Map<String, String> directory, List<String> find) {
+        long hashTimeStart = System.currentTimeMillis();
+        long found = 0;
+
+        for (String toFind : find) {
+            String result = directory.get(toFind);
+            if (result != null) {
+                found++;
+            }
+        }
+        long hashTimeStop = System.currentTimeMillis();
+        hashSearchTime = hashTimeStop - hashTimeStart;
+        return found;
+    }
+
+    private static Map<String, String> hashMap(List<String> directory) {
+        long sortingTimeStart = System.currentTimeMillis();
+        Map<String, String> directoryMap = new HashMap<>();
+        for (String entry : directory) {
+            directoryMap.put(entry.split("\\s+", 2)[1], entry.split("\\s+", 2)[0]);
+        }
+        long sortingTimeStop = System.currentTimeMillis();
+        sortingTime = sortingTimeStop - sortingTimeStart;
+        return directoryMap;
     }
 }
